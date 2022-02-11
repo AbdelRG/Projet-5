@@ -35,7 +35,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
 
 const btn = document.getElementById("addToCart");
 const quantity = document.getElementById("quantity");
-var counter = 0;
+
 btn.addEventListener("click", function () {
   const colorCheck = productInfo.colors;
 
@@ -52,7 +52,7 @@ btn.addEventListener("click", function () {
       quantity: quantityCheck,
       id: productInfo._id,
     };
-    panier.ajouter(cartProduct);
+    panier.addCartProduct(cartProduct);
   } else {
     alert("panier incorrect");
   }
