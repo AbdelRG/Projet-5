@@ -10,7 +10,7 @@ export function deleteCart() {}
 export function addProductCart(product) {
   const colorProduct = product.color;
   const idProduct = product.id;
-  var cart = recuperation();
+  var cart = getCart();
   var isntIn = false;
 
   if (cart.length == 0) {

@@ -1,38 +1,45 @@
 import * as panier from "./panier.js";
+var productInfo = false;
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const id = urlParams.get("id");
-var productInfo = false;
-fetch(`http://localhost:3000/api/products/${id}`)
-  .then(function (res) {
-    if (res.ok) {
-      return res.json();
-    }
-  })
-  .then(function (product) {
-    const itemImg = document.getElementsByClassName("item__img")[0];
 
-    const img = document.createElement("img");
-    img.src = `${product.imageUrl}`;
-    img.alt = `${product.altTxt}`;
-    itemImg.appendChild(img);
-    const h1 = document.getElementById("title");
-    h1.innerHTML = `${product.name}`;
-    const span = document.getElementById("price");
-    span.innerHTML = `${product.price}`;
-    const p = document.getElementById("description");
-    p.innerHTML = `${product.description}`;
-    const colorSelect = document.getElementById("colors");
-    product.colors.forEach((color) => {
-      const option = document.createElement("option");
-      option.text = color;
-      option.value = color;
-      colorSelect.appendChild(option);
-    });
-    return (productInfo = product);
-  })
-  .catch(function (err) {});
+export const getProductById = (id) => {
+  console.log(id);
+  fetch(`http://localhost:3000/api/products/${id}`)
+    .then(function (res) {
+      if (res.ok) {
+        return res.json();
+      }
+    })
+    .then(function (product) {
+      setProduct(product);
+    })
+    .catch(function (err) {});
+};
+const setProduct = (product) => {
+  const itemImg = document.getElementsByClassName("item__img")[0];
 
+  const img = document.createElement("img");
+  img.src = `${product.imageUrl}`;
+  img.alt = `${product.altTxt}`;
+  itemImg.appendChild(img);
+  const h1 = document.getElementById("title");
+  h1.innerHTML = `${product.name}`;
+  const span = document.getElementById("price");
+  span.innerHTML = `${product.price}`;
+  const p = document.getElementById("description");
+  p.innerHTML = `${product.description}`;
+  const colorSelect = document.getElementById("colors");
+  product.colors.forEach((color) => {
+    const option = document.createElement("option");
+    option.text = color;
+    option.value = color;
+    colorSelect.appendChild(option);
+  });
+  return (productInfo = product);
+};
+getProductById(id);
 const btn = document.getElementById("addToCart");
 const quantity = document.getElementById("quantity");
 
@@ -52,7 +59,7 @@ btn.addEventListener("click", function () {
       quantity: quantityCheck,
       id: productInfo._id,
     };
-    panier.addCartProduct(cartProduct);
+    panier.addProductCart(cartProduct);
   } else {
     alert("panier incorrect");
   }
