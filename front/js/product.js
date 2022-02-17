@@ -5,7 +5,6 @@ const urlParams = new URLSearchParams(queryString);
 const id = urlParams.get("id");
 
 export const getProductById = (id) => {
-  console.log(id);
   fetch(`http://localhost:3000/api/products/${id}`)
     .then(function (res) {
       if (res.ok) {
