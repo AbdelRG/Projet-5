@@ -1,4 +1,5 @@
 import { getCart } from "./panier.js";
+import { deleteCart } from "./panier.js";
 var productInfo = false;
 const cart = getCart();
 const getProductById = (product) => {
@@ -43,7 +44,7 @@ const setProduct = (productInfo, product) => {
   pColor.innerHTML = product.color;
   div3.appendChild(pColor);
   const pPrice = document.createElement("p");
-  pPrice.innerHTML = productInfo.price + "€";
+  pPrice.innerHTML = productInfo.price * product.quantity + "€";
   div3.appendChild(pPrice);
   const div4 = document.createElement("div");
   div4.setAttribute("class", "cart__item__content__settings");
@@ -70,7 +71,19 @@ const setProduct = (productInfo, product) => {
   const pDelete = document.createElement("p");
   pDelete.setAttribute("class", "deleteItem");
   pDelete.innerHTML = "Supprimer";
+
   div6.appendChild(pDelete);
+  pDelete.addEventListener("click", function () {
+    var r3 = pDelete.closest("article > div");
+
+    var r4 = r3.closest(":not(div)");
+
+    const dataId = r4.getAttribute("data-id");
+    const dataColor = r4.getAttribute("data-color");
+
+    r4.remove();
+    deleteCart(dataColor, dataId);
+  });
 };
 const showCartProduct = () => {
   if (cart.length > 0) {

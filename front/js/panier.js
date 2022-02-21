@@ -6,7 +6,17 @@ export function getCart() {
   }
   return JSON.parse(cart);
 }
-export function deleteCart() {}
+export function deleteCart(dataColor, dataId) {
+  var cart = getCart();
+  const productNumber = cart.findIndex(function (product) {
+    return product.color === dataColor && product.id === dataId;
+  });
+
+  console.log(productNumber);
+  cart.splice(productNumber, 1);
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
 export function addProductCart(product) {
   const colorProduct = product.color;
   const idProduct = product.id;
