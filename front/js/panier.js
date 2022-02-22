@@ -45,3 +45,14 @@ export function addProductCart(product) {
     }
   }
 }
+
+export function setCart(dataColor, dataId, newQuantity) {
+  var cart = getCart();
+  const productNumber = cart.findIndex(function (product) {
+    return product.color === dataColor && product.id === dataId;
+  });
+
+  cart[productNumber].quantity = newQuantity;
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+}

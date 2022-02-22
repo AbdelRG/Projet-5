@@ -1,5 +1,6 @@
 import { getCart } from "./panier.js";
 import { deleteCart } from "./panier.js";
+import { setCart } from "./panier.js";
 var productInfo = false;
 const cart = getCart();
 const getProductById = (product) => {
@@ -17,6 +18,7 @@ const getProductById = (product) => {
 const section = document.getElementById("cart__items");
 
 const setProduct = (productInfo, product) => {
+  console.log("ojk");
   const article = document.createElement("article");
 
   article.setAttribute("class", "cart__item");
@@ -65,6 +67,17 @@ const setProduct = (productInfo, product) => {
   input.setAttribute("max", "100");
   input.setAttribute("value", `${product.quantity}`);
   div5.appendChild(input);
+  input.addEventListener("change", function () {
+    var r1 = input.closest("article > div");
+    var r2 = r1.closest(":not(div)");
+    const dataId = r2.getAttribute("data-id");
+    const dataColor = r2.getAttribute("data-color");
+
+    const newQuantity = this.value;
+    pQuantity.innerHTML = "Qté :" + newQuantity;
+    pPrice.innerHTML = productInfo.price * newQuantity + "€";
+    setCart(dataColor, dataId, newQuantity);
+  });
   const div6 = document.createElement("div");
   div6.setAttribute("class", "cart__item__content__settings__delete");
   div4.appendChild(div6);
@@ -84,11 +97,22 @@ const setProduct = (productInfo, product) => {
     r4.remove();
     deleteCart(dataColor, dataId);
   });
+  pTotalQuantity = document.getElementById("totalQuantity");
+  console.log(pTotalQuantity);
+  pTotalQuantity.innerHTML = totalQuantity;
+  pTotalPrice = document.getElementById("totalPrice");
+  console.log(pTotalPrice);
+  pTotalPrice.innerHTML = totalPrice;
 };
+
 const showCartProduct = () => {
   if (cart.length > 0) {
     cart.forEach((product) => {
       getProductById(product);
+      const totalPrice = 0;
+      const totalQuantity = 0;
+      totalQuantity + product.quantity;
+      totalPrice + product.price * product.quantity;
     });
   }
 };
