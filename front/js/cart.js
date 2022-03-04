@@ -2,6 +2,8 @@ import { getCart } from "./panier.js";
 import { deleteCart } from "./panier.js";
 import { setCart } from "./panier.js";
 var productInfo = false;
+var totalPrice = 0;
+var totalQuantity = 0;
 const cart = getCart();
 const getProductById = (product) => {
   fetch(`http://localhost:3000/api/products/${product.id}`)
@@ -18,8 +20,8 @@ const getProductById = (product) => {
 const section = document.getElementById("cart__items");
 
 const setProduct = (productInfo, product) => {
-  console.log("ojk");
   const article = document.createElement("article");
+  var totalPriceArticle = Number(productInfo.price) * Number(product.quantity);
 
   article.setAttribute("class", "cart__item");
   article.setAttribute("data-id", `${product.id}`);
@@ -75,7 +77,14 @@ const setProduct = (productInfo, product) => {
 
     const newQuantity = this.value;
     pQuantity.innerHTML = "Qté :" + newQuantity;
-    pPrice.innerHTML = productInfo.price * newQuantity + "€";
+    pPrice.innerHTML = productInfo.price + "€";
+    var deltaQuantity = newQuantity - product.quantity;
+
+    var deltaTotalPriceArticle = productInfo.price * deltaQuantity;
+
+    totalUpdate(deltaTotalPriceArticle, deltaQuantity);
+
+    product.quantity = newQuantity;
     setCart(dataColor, dataId, newQuantity);
   });
   const div6 = document.createElement("div");
@@ -96,23 +105,27 @@ const setProduct = (productInfo, product) => {
 
     r4.remove();
     deleteCart(dataColor, dataId);
+    var deltaPrice = productInfo.price * -product.quantity;
+    totalUpdate(deltaPrice, -product.quantity);
   });
-  pTotalQuantity = document.getElementById("totalQuantity");
-  console.log(pTotalQuantity);
-  pTotalQuantity.innerHTML = totalQuantity;
-  pTotalPrice = document.getElementById("totalPrice");
-  console.log(pTotalPrice);
-  pTotalPrice.innerHTML = totalPrice;
+
+  totalUpdate(totalPriceArticle, product.quantity);
+};
+const totalUpdate = (totalPriceArticle, quantity) => {
+  const pTotalQuantity = document.getElementById("totalQuantity");
+
+  const pTotalPrice = document.getElementById("totalPrice");
+  totalQuantity += Number(quantity);
+  pTotalQuantity.innerHTML = `${totalQuantity}`;
+  totalPrice += totalPriceArticle;
+
+  pTotalPrice.innerHTML = `${totalPrice}`;
 };
 
 const showCartProduct = () => {
   if (cart.length > 0) {
     cart.forEach((product) => {
       getProductById(product);
-      const totalPrice = 0;
-      const totalQuantity = 0;
-      totalQuantity + product.quantity;
-      totalPrice + product.price * product.quantity;
     });
   }
 };
