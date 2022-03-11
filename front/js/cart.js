@@ -189,7 +189,9 @@ city.oninput = function () {
 };
 email.oninput = function () {
   var value = this.value;
-  const regex = new RegExp("^[a-zA-Z0-9_-]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,3}$");
+  const regex = new RegExp(
+    "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,3}$"
+  );
 
   if (regex.test(value)) {
     emailErrorMsg.innerHTML = "champ valide";
@@ -210,36 +212,47 @@ btn.addEventListener("click", function (event) {
     firstNameErrorMsg.innerHTML == "champ valide"
   ) {
     event.preventDefault();
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const firstName = urlParams.get("firstName");
-    const lastName = urlParams.get("lastName");
-    const address = urlParams.get("address");
 
-    const city = urlParams.get("city");
-    const email = urlParams.get("email");
+    const firstName = document.getElementById("firstName").value;
+    const lastName = document.getElementById("lastName").value;
+    const address = document.getElementById("address").value;
+
+    const city = document.getElementById("city").value;
+    const email = document.getElementById("email").value;
     const contact = {
-      prénom: firstName,
-      nom: lastName,
+      firstName: firstName,
+      lastName: lastName,
       address: address,
-      ville: city,
+      city: city,
       email: email,
     };
 
     const sendOrder = (contact) => {
       const products = getCart();
-      fetch("http://localhost:3000/api/product/order", {
+      let arrayProductId = [];
+
+      products.forEach((product) => {
+        arrayProductId.push(product.id);
+      });
+
+      const objectFinal = {
+        contact,
+        products: arrayProductId,
+      };
+      fetch("http://localhost:3000/api/products/order", {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(contact),
-        body: JSON.stringify(products),
+        body: JSON.stringify(objectFinal),
       })
         .then(function (res) {
           if (res.ok) {
-            console.log(res.json());
+            res.json().then(function (data) {
+              const orderId = data.orderId;
+              window.location.replace(`./confirmation.html?orderId=${orderId}`);
+            });
           }
         })
         .catch(function (err) {
