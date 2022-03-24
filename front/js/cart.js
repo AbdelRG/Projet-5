@@ -48,7 +48,7 @@ const setProduct = (productInfo, product) => {
   pColor.innerHTML = product.color;
   div3.appendChild(pColor);
   const pPrice = document.createElement("p");
-  pPrice.innerHTML = productInfo.price * product.quantity + "€";
+  pPrice.innerHTML = productInfo.price + "€";
   div3.appendChild(pPrice);
   const div4 = document.createElement("div");
   div4.setAttribute("class", "cart__item__content__settings");
